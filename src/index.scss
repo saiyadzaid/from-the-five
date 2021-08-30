@@ -270,6 +270,20 @@ section.product-containt {
       div.filter-title {
         display: flex;
         justify-content: space-between;
+        img {
+          border-radius: 50%;
+          cursor: pointer;
+          transition: 0.2s ease-in-out;
+          &:hover {
+            background: var(--light);
+          }
+        }
+      }
+      div.isActive {
+        display: block;
+      }
+      div.isNotActive {
+        display: none;
       }
       div.filter-items {
         div.filter {
@@ -280,7 +294,6 @@ section.product-containt {
             margin-left: 12px;
           }
         }
-
       }
     }
   }
@@ -288,9 +301,11 @@ section.product-containt {
     flex: 5;
     margin-left: 18px;
     display: flex;
+    flex-wrap: wrap;
     div.product-item {
       width: 300px;
-      margin: auto;
+      margin-right: 40px;
+      margin-bottom: 15px;
       img {
         height: 300px;
         width: 100%;
@@ -301,6 +316,8 @@ section.product-containt {
       }
       p.product-price {
         text-align: center;
+        font-weight: 900;
+        font-size: x-large;
       }
     }
   }
