@@ -4,6 +4,7 @@ import Heart from "./assets/icons/heart.svg";
 import Expand from "./assets/icons/expand.svg";
 import SearchIcon from "./assets/icons/search.svg";
 import TestIMG from "./assets/Images/test.jpg";
+import { useState } from "react";
 function App() {
   return (
     <>
@@ -28,7 +29,7 @@ const Header = () => {
           <ul className="flex align-center category-menu">
             <li className="flex align-center dropdown">
               <a href="#">
-                Category <img src={Expand} alt="" className="dropbtn" />
+                Shop <img src={Expand} alt="" className="dropbtn" />
               </a>
               <div class="dropdown-content">
                 <a href="#">Shirts</a>
@@ -42,7 +43,10 @@ const Header = () => {
               </a>
             </li>
             <li>
-              <a href="#">Contacts</a>
+              <a href="#">Contact us</a>
+            </li>
+            <li>
+              <a href="#">About us</a>
             </li>
           </ul>
         </section>
@@ -65,7 +69,7 @@ const Header = () => {
 const Search = () => {
   return (
     <section className="container search-box">
-      <h1>FT5 Search</h1>
+      <h1>From The Five</h1>
       <div className="search-area flex justify-center align-center">
         <div className="search-section flex">
           <input type="text" name="" id="" placeholder="Write something..." />
@@ -110,15 +114,33 @@ const SearchResult = () => {
 };
 
 const ProductContent = () => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [filterAccordian, setFilterAccordian] = useState({
+    isCategoryFilterOpen: false,
+    isSizeFilterOpen: false,
+  });
   return (
     <section className="container product-containt">
       <div className="filters">
         <div className="filter-item">
           <div className="filter-title">
             <h4>Categories</h4>
-            <img src={Expand} alt="" />
+            <img
+              src={Expand}
+              alt=""
+              onClick={() =>
+                setFilterAccordian({
+                  ...filterAccordian,
+                  isCategoryFilterOpen: !filterAccordian.isCategoryFilterOpen,
+                })
+              }
+            />
           </div>
-          <div className="filter-items">
+          <div
+            className={`filter-items ${
+              filterAccordian.isCategoryFilterOpen ? "isActive" : "isNotActive"
+            }`}
+          >
             <div className="filter">
               <input type="checkbox" name="" id="" />
               <span>Coats</span>
@@ -148,9 +170,16 @@ const ProductContent = () => {
         <div className="filter-item">
           <div className="filter-title">
             <h4>Size</h4>
-            <img src={Expand} alt="" />
+            <img src={Expand} alt="" onClick={() =>
+                setFilterAccordian({
+                  ...filterAccordian,
+                  isSizeFilterOpen: !filterAccordian.isSizeFilterOpen,
+                })
+              } />
           </div>
-          <div className="filter-items">
+          <div className={`filter-items ${
+              filterAccordian.isSizeFilterOpen ? "isActive" : "isNotActive"
+            }`}>
             <div className="filter">
               <input type="checkbox" name="" id="" />
               <span>XL</span>
@@ -159,21 +188,17 @@ const ProductContent = () => {
         </div>
       </div>
       <div className="products-list">
-        <div className="product-item">
-          <img src={TestIMG} alt="" />
-          <h3 className="product-name text-muted">T-SHIRTS FOR MEN</h3>
-          <p className="product-price">$12500</p>
-        </div>
-        <div className="product-item">
-          <img src={TestIMG} alt="" />
-          <h3 className="product-name text-muted">T-SHIRTS FOR MEN</h3>
-          <p className="product-price">$12500</p>
-        </div>
-        <div className="product-item">
-          <img src={TestIMG} alt="" />
-          <h3 className="product-name text-muted">T-SHIRTS FOR MEN</h3>
-          <p className="product-price">$12500</p>
-        </div>
+        {new Array(12).fill(0).map((value, index) => {
+          return (
+            <div className="product-item" key={index}>
+              <div>
+                <img src={TestIMG} alt="" />
+              </div>
+              <h3 className="product-name text-muted">T-SHIRTS FOR MEN</h3>
+              <p className="product-price">$1250</p>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
