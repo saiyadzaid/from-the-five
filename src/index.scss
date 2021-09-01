@@ -299,15 +299,17 @@ section.product-containt {
   }
   div.products-list {
     flex: 5;
-    margin-left: 18px;
+    margin-left: 12px;
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
     div.product-item {
-      width: 300px;
-      margin-right: 40px;
-      margin-bottom: 15px;
+      width: 340px;
+      height: auto;
+      margin-bottom: 12px;
       cursor: pointer;
       div {
+        height: 400px;
         overflow: hidden;
         &:hover {
           img {
@@ -316,7 +318,7 @@ section.product-containt {
         }
         img {
           transition: 0.3s ease-in-out;
-          height: 300px;
+          height: auto;
           width: 100%;
           object-fit: cover;
         }
