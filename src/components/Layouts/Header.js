@@ -24,11 +24,6 @@ const Header = () => {
                 <a href="#">Shorts</a>
               </div>
             </li>
-            <li className="flex align-center">
-              <a href="#">
-                Collections <img src={Expand} alt="" />
-              </a>
-            </li>
             <li>
               <a href="#">Contact us</a>
             </li>

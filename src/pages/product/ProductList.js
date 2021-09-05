@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TestIMG from "../../assets/Images/test.jpg";
+import TestIMG from "../../assets/Images/test1.jpg";
 import SearchIcon from "../../assets/icons/search.svg";
 import Expand from "../../assets/icons/expand.svg";
 const ProductList = () => {
