@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import TestIMG from "../../assets/Images/test1.jpg";
 import SearchIcon from "../../assets/icons/search.svg";
 import Expand from "../../assets/icons/expand.svg";
+import { Link } from "react-router-dom";
+import history from "../../common/history";
+import { useSelector } from "react-redux";
 const ProductList = () => {
   return (
     <>
@@ -49,8 +52,8 @@ const SearchResult = () => {
             Sort <img src={Expand} alt="" className="dropbtn" />
           </span>
           <div className="dropdown-content">
-            <a href="#">Newest</a>
-            <a href="#">Oldest</a>
+            <Link href="#">Newest</Link>
+            <Link href="#">Oldest</Link>
           </div>
         </div>
       </div>
@@ -62,6 +65,7 @@ const ProductContent = () => {
     isCategoryFilterOpen: false,
     isSizeFilterOpen: false,
   });
+  const categories = useSelector((state) => state.categories.categories);
   return (
     <section className="container product-containt">
       <div className="filters">
@@ -84,30 +88,14 @@ const ProductContent = () => {
               filterAccordian.isCategoryFilterOpen ? "isActive" : "isNotActive"
             }`}
           >
-            <div className="filter">
-              <input type="checkbox" name="" id="" />
-              <span>Coats</span>
-            </div>
-            <div className="filter">
-              <input type="checkbox" name="" id="" />
-              <span>Denim</span>
-            </div>
-            <div className="filter">
-              <input type="checkbox" name="" id="" />
-              <span>Jackets</span>
-            </div>
-            <div className="filter">
-              <input type="checkbox" name="" id="" />
-              <span>Pants</span>
-            </div>
-            <div className="filter">
-              <input type="checkbox" name="" id="" />
-              <span>T-Shirts</span>
-            </div>
-            <div className="filter">
-              <input type="checkbox" name="" id="" />
-              <span>Suits</span>
-            </div>
+            {categories.map((category) => {
+              return (
+                <div className="filter" key={category._id}>
+                  <input type="checkbox" name="" id="" />
+                  <span>{category.name}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="filter-item">
@@ -139,7 +127,11 @@ const ProductContent = () => {
       <div className="products-list">
         {new Array(12).fill(0).map((value, index) => {
           return (
-            <div className="product-item" key={index}>
+            <div
+              className="product-item"
+              key={index}
+              onClick={() => history.push("/product/1")}
+            >
               <div>
                 <img src={TestIMG} alt="" />
               </div>

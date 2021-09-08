@@ -1,9 +1,12 @@
-import React from 'react';
+import React from "react";
 import Logo from "../../logo.svg";
 import Cart from "../../assets/icons/cart.svg";
 import Heart from "../../assets/icons/heart.svg";
 import Expand from "../../assets/icons/expand.svg";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 const Header = () => {
+  const categories = useSelector((state) => state.categories.categories);
   return (
     <header className="top-header">
       <div className="container flex justify-between align-center">
@@ -15,20 +18,20 @@ const Header = () => {
           </section>
           <ul className="flex align-center category-menu">
             <li className="flex align-center dropdown">
-              <a href="#">
+              <Link href="#">
                 Shop <img src={Expand} alt="" className="dropbtn" />
-              </a>
+              </Link>
               <div className="dropdown-content">
-                <a href="#">Shirts</a>
-                <a href="#">Hoodie</a>
-                <a href="#">Shorts</a>
+                {categories.map((category) => {
+                  return <Link href="#" key={category._id}>{category.name}</Link>;
+                })}
               </div>
             </li>
             <li>
-              <a href="#">Contact us</a>
+              <Link href="#">Contact us</Link>
             </li>
             <li>
-              <a href="#">About us</a>
+              <Link href="#">About us</Link>
             </li>
           </ul>
         </section>

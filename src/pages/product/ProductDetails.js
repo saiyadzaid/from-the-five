@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Test1 from "../../assets/Images/test1.jpg";
 import Test2 from "../../assets/Images/test2.jpg";
 import Test3 from "../../assets/Images/test3.jpg";
@@ -6,8 +6,12 @@ import Test4 from "../../assets/Images/test4.jpg";
 import Remove from "../../assets/icons/remove.svg";
 import Add from "../../assets/icons/add.svg";
 import Heart from "../../assets/icons/heart.svg";
+import { useDispatch } from "react-redux";
+import { getRecords } from "../../redux/services/common";
+import { GET_CATEGORIES } from "../../redux/services/category/categories.action";
 
 const ProductDetails = () => {
+  const dispatch = useDispatch();
   const [isOpenProductInfo, setIsOpenProductInfo] = useState(true);
   const [images, setImages] = useState([
     { src: Test1, active: true },
@@ -16,6 +20,10 @@ const ProductDetails = () => {
     { src: Test4, active: false },
   ]);
   const [activeImage, setActiveImage] = useState(images[0]);
+
+  useEffect(() => {
+      dispatch(getRecords('/categories', GET_CATEGORIES));
+  }, []);
   return (
     <section className="product-detail-section container">
       <div className="product-detail-wrapper">
