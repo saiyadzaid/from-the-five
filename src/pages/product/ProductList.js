@@ -1,11 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TestIMG from "../../assets/Images/test1.jpg";
 import SearchIcon from "../../assets/icons/search.svg";
 import Expand from "../../assets/icons/expand.svg";
 import { Link } from "react-router-dom";
 import history from "../../common/history";
-import { useSelector } from "react-redux";
-const ProductList = () => {
+import { useDispatch, useSelector } from "react-redux";
+import { GET_CATEGORIES } from "../../redux/services/category/categories.action";
+import { getRecords } from "../../redux/services/common";
+import { GET_PRODUCTS } from "../../redux/services/product/product.actions";
+const ProductList = (props) => {
+  const dispatch = useDispatch();
+  const { filters } = useSelector((state) => state.products);
+  useEffect(() => {
+    dispatch(getRecords("/categories", GET_CATEGORIES));
+  }, []);
+  useEffect(() => {
+    if (filters.category) {
+      dispatch(
+        getRecords("/products?category=" + filters.category, GET_PRODUCTS)
+      );
+    } else {
+      dispatch(getRecords("/products", GET_PRODUCTS));
+    }
+  }, [filters]);
   return (
     <>
       <Search />
@@ -37,10 +54,11 @@ const Search = () => {
   );
 };
 const SearchResult = () => {
+  const { products } = useSelector((state) => state.products);
   return (
     <section className="container search-result-section">
       <div className="search-item-found">
-        <span className="text-muted">2481 Items Found</span>
+        <span className="text-muted">{products.length} Items Found</span>
       </div>
       <div className="view-types">
         <span>Grid View</span>
@@ -66,9 +84,10 @@ const ProductContent = () => {
     isSizeFilterOpen: false,
   });
   const categories = useSelector((state) => state.categories.categories);
+  const products = useSelector((state) => state.products.products);
   return (
     <section className="container product-containt">
-      <div className="filters">
+      {/* <div className="filters">
         <div className="filter-item">
           <div className="filter-title">
             <h4>Categories</h4>
@@ -123,20 +142,20 @@ const ProductContent = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="products-list">
-        {new Array(12).fill(0).map((value, index) => {
+        {products.map((product, index) => {
           return (
             <div
               className="product-item"
               key={index}
-              onClick={() => history.push("/product/1")}
+              onClick={() => history.push("/product/" + product._id)}
             >
               <div>
-                <img src={TestIMG} alt="" />
+                <img src={product.productItems[0].images[0].url} alt="" />
               </div>
-              <h3 className="product-name text-muted">T-SHIRTS FOR MEN</h3>
-              <p className="product-price">$1250</p>
+              <h3 className="product-name text-muted">{product.name}</h3>
+              <p className="product-price">${product.price}</p>
             </div>
           );
         })}

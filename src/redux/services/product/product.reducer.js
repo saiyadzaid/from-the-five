@@ -18,15 +18,35 @@ const product = {
           name: "file1",
           url: TestIMG,
         },
+        {
+          uid: 2,
+          name: "file1",
+          url: TestIMG,
+        },
+        {
+          uid: 3,
+          name: "file1",
+          url: TestIMG,
+        },
+        {
+          uid: 4,
+          name: "file1",
+          url: TestIMG,
+        },
       ],
     },
   ],
   size: ["XL", "S", "XS"],
   isActive: true,
-}
+};
+const initialFilterState = {
+  category: null,
+  size: [],
+};
 const initialState = {
-  products: [product],
-  product: product,
+  products: [],
+  product: null,
+  filters: initialFilterState,
   loading: false,
   error: null,
 };
@@ -59,6 +79,22 @@ const productsReducer = (state = initialState, { type, status, payload }) => {
             ...state,
             loading: false,
             product: payload.product,
+          };
+        case "error":
+          return error;
+      }
+      break;
+    case "SET_FILTERS":
+      switch (status) {
+        case "loading":
+          return loading;
+        case "success":
+          return {
+            ...state,
+            loading: false,
+            filters: {
+              category: payload.filter.category,
+            },
           };
         case "error":
           return error;

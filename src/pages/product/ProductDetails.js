@@ -1,29 +1,41 @@
 import React, { useEffect, useState } from "react";
-import Test1 from "../../assets/Images/test1.jpg";
-import Test2 from "../../assets/Images/test2.jpg";
-import Test3 from "../../assets/Images/test3.jpg";
-import Test4 from "../../assets/Images/test4.jpg";
 import Remove from "../../assets/icons/remove.svg";
 import Add from "../../assets/icons/add.svg";
 import Heart from "../../assets/icons/heart.svg";
-import { useDispatch } from "react-redux";
-import { getRecords } from "../../redux/services/common";
+import { useDispatch, useSelector } from "react-redux";
+import { getRecordById, getRecords } from "../../redux/services/common";
 import { GET_CATEGORIES } from "../../redux/services/category/categories.action";
+import { GET_PRODUCT } from "../../redux/services/product/product.actions";
+import { GET_COLORS } from "../../redux/services/color/color.actions";
 
-const ProductDetails = () => {
+const ProductDetails = (props) => {
   const dispatch = useDispatch();
   const [isOpenProductInfo, setIsOpenProductInfo] = useState(true);
-  const [images, setImages] = useState([
-    { src: Test1, active: true },
-    { src: Test2, active: false },
-    { src: Test3, active: false },
-    { src: Test4, active: false },
-  ]);
+  const { product, loading } = useSelector((state) => state.products);
+  const { colors } = useSelector((state) => state.colors);
+  const [images, setImages] = useState([]);
   const [activeImage, setActiveImage] = useState(images[0]);
+    useEffect(() => {
+    dispatch(getRecords("/categories", GET_CATEGORIES));
+    dispatch(getRecords("/colors", GET_COLORS));
+  }, []);
 
   useEffect(() => {
-      dispatch(getRecords('/categories', GET_CATEGORIES));
-  }, []);
+    if (props.match.params.id) {
+      dispatch(
+        getRecordById("/products/" + props.match.params.id, GET_PRODUCT)
+      );
+    }
+  }, props.location);
+  useEffect(() => {
+    if (product) {
+      setImages(product.productItems[0].images);
+      setActiveImage(product.productItems[0].images[0]);
+    }
+  }, product);
+  if (loading || !product) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <section className="product-detail-section container">
       <div className="product-detail-wrapper">
@@ -34,8 +46,8 @@ const ProductDetails = () => {
             <span>Jackets</span>
           </div>
           <div className="product-title">
-            <h1>Suilven Quilted Jacket</h1>
-            <h2>$1,192.00</h2>
+            <h1>{product.name}</h1>
+            <h2>${product.price}</h2>
           </div>
           <div className="product-meta-section">
             <div className="product-info">
@@ -54,10 +66,7 @@ const ProductDetails = () => {
               <hr />
               {isOpenProductInfo && (
                 <>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Reiciendis, voluptatibus?
-                  </p>
+                  <p>{product.description}</p>
                 </>
               )}
             </div>
@@ -69,7 +78,7 @@ const ProductDetails = () => {
               {images.map((value, index) => {
                 return (
                   <img
-                    src={value.src}
+                    src={value.url}
                     alt={"img1" + index}
                     style={{ order: 1 }}
                     onClick={() => setActiveImage(value)}
@@ -78,7 +87,9 @@ const ProductDetails = () => {
               })}
             </div>
             <div className="thumb-img">
-              <img src={activeImage.src} alt="img1" style={{ order: 1 }} />
+              {activeImage && (
+                <img src={activeImage.url} alt="img1" style={{ order: 1 }} />
+              )}
             </div>
           </div>
         </div>
@@ -98,9 +109,14 @@ const ProductDetails = () => {
             <div className="color size-color-item">
               <p className="size-color-title">Choose Color</p>
               <div className="colors">
-                <button style={{ backgroundColor: "#75543E" }}></button>
-                <button style={{ backgroundColor: "#443226" }}></button>
-                <button style={{ backgroundColor: "tomato" }}></button>
+                {colors.map((color, index) => {
+                  return (
+                    <button
+                      style={{ backgroundColor: color.hexcode }}
+                      key={index}
+                    />
+                  );
+                })}
               </div>
             </div>
           </div>
