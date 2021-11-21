@@ -7,6 +7,7 @@ import { getRecordById, getRecords } from "../../redux/services/common";
 import { GET_CATEGORIES } from "../../redux/services/category/categories.action";
 import { GET_PRODUCT } from "../../redux/services/product/product.actions";
 import { GET_COLORS } from "../../redux/services/color/color.actions";
+import "./productDetails.scss";
 
 const ProductDetails = (props) => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const ProductDetails = (props) => {
   const { colors } = useSelector((state) => state.colors);
   const [images, setImages] = useState([]);
   const [activeImage, setActiveImage] = useState(images[0]);
+  const [cartProduct, setQty] = useState({qty: 1});
     useEffect(() => {
     dispatch(getRecords("/categories", GET_CATEGORIES));
     dispatch(getRecords("/colors", GET_COLORS));
@@ -47,7 +49,7 @@ const ProductDetails = (props) => {
           </div>
           <div className="product-title">
             <h1>{product.name}</h1>
-            <h2>${product.price}</h2>
+            <h2>{`$${product.price}`}</h2>
           </div>
           <div className="product-meta-section">
             <div className="product-info">
@@ -117,6 +119,24 @@ const ProductDetails = (props) => {
                     />
                   );
                 })}
+              </div>
+            </div>
+            <div className="color size-color-item">
+              <p className="size-color-title"></p>
+              <div className="qty">
+                <div className="product-qty">
+                  <div id="sub" className="remove-qty" onClick={()=> {
+                    cartProduct.qty !== 1 && (setQty({...cartProduct, qty: cartProduct.qty - 1}))
+                  }
+                  }
+                    >-</div>
+                  <div className="qty"> {cartProduct.qty} </div>
+                  <div id="add" className="add-qty" onClick={
+                    ()=> {
+                      cartProduct.qty !== 10 && (setQty({...cartProduct, qty: cartProduct.qty + 1}))
+                    }
+                    }>+</div>
+                </div>
               </div>
             </div>
           </div>

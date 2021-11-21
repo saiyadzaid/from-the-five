@@ -9,6 +9,7 @@ import { SET_FILTERS } from "../../redux/services/product/product.actions";
 import history from "../../common/history";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import { SideSheet, Pane, Heading, Card, Button, MenuIcon, CrossIcon } from "evergreen-ui";
+import "./header.scss";
 const Header = () => {
   const categories = useSelector((state) => state.categories.categories);
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const Header = () => {
       <div className="container flex justify-between align-center">
         <section className="main-nav flex">
           <section className="logo">
-            <img src={Logo} alt="logo" />
+            <img src={Logo} alt="logo" onClick={()=>history.push('/')} />
           </section>
           {!matches && (
             <ul className="flex align-center category-menu">
@@ -65,7 +66,7 @@ const Header = () => {
             <li>
               <img src={Cart} alt="cart" />
             </li>
-            <li>Zaid</li>
+            {/* <li>Zaid</li> */}
             {matches && (
               <li>
                 <MenuIcon onClick={() => setIsShown(true)} />
