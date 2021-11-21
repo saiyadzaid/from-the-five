@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:8080/api/';
-
+const baseURL = process.env.NODE_ENV === 'develop' ? "https://from-the-five-develop.herokuapp.com/api/" : 'http://localhost:8080/api/';
 const axiosInstance = axios.create({ baseURL });
 const isHandlerEnabled = (config = {}) =>
   config.hasOwnProperty('handlerEnabled') && config.handlerEnabled;
