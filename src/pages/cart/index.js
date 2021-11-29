@@ -12,7 +12,6 @@ const Cart = () => {
         localStorage.setItem('cart', JSON.stringify(filteredProducts));
         setCartProducts(filteredProducts);
     }
-
     return (
         <section className="container">
             <div className="cart">
@@ -23,16 +22,16 @@ const Cart = () => {
 
                 <div className="cart-product-items">
                     {
-                        cartProducts && cartProducts.length ? cartProducts.map(product=> {
+                        cartProducts && cartProducts.length ? cartProducts.map((product)=> {
                             return (
-                                <div className="product-item">
+                                <div className="product-item" key={product.product}>
                                     <img src={product.image.url} />
                                     <div>
                                         <h3 className="product-title">
                                             {product.name}
                                         </h3>
                                         <p>{product.size}</p>
-                                        <p>INR ${product.price}</p>
+                                        <p>INR {product.price.toFixed(2)}</p>
                                     </div>
                                     <span onClick={()=> removeProductFromCart(product.product)}>
                                         <SmallCrossIcon />
@@ -46,7 +45,9 @@ const Cart = () => {
                 <div className="inr-instruction">
                     <h1>
                         <span>Total: </span>
-                        INR 0.00
+                        INR { cartProducts && cartProducts.length ? 
+                            cartProducts.map(product=> product.price).reduce((pre, cur) => pre+ cur, 0).toFixed(2) :
+                            0 }
                     </h1>
                     <p>Shipping & taxes calculated at checkout
 

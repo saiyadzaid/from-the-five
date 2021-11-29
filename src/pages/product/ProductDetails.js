@@ -7,7 +7,7 @@ import { getRecordById, getRecords } from "../../redux/services/common";
 import { GET_CATEGORIES } from "../../redux/services/category/categories.action";
 import { GET_PRODUCT } from "../../redux/services/product/product.actions";
 import { GET_COLORS } from "../../redux/services/color/color.actions";
-import { Alert } from "evergreen-ui";
+import { toaster, Pane, Spinner, Select } from "evergreen-ui";
 import "./productDetails.scss";
 
 const ProductDetails = (props) => {
@@ -59,6 +59,7 @@ const ProductDetails = (props) => {
     }
     if (!localCart) {
       localStorage.setItem('cart', JSON.stringify([newProductToBeAdd]));
+      toaster.success('Item added in the cart');
     } else {
       const isProductAlreadyExistsInTheCart = localCart.find(prdct=> prdct.product === newProductToBeAdd.product);
       if (isProductAlreadyExistsInTheCart) {
@@ -67,15 +68,19 @@ const ProductDetails = (props) => {
       }
       localCart.push(newProductToBeAdd);
       localStorage.setItem('cart', JSON.stringify(localCart));
+      toaster.success('Item added in the cart');
     }
     console.log("localCart = ", localCart);
   }
   if (loading || !product) {
-    return <h1>Loading...</h1>;
+    return (
+      <Pane display='flex' alignItems='center' justifyContent='center' height={400}>
+        <Spinner />
+      </Pane>
+    )
   }
   return (
     <section className="product-detail-section container">
-      {/* <Alert title="Item added to the cart" /> */}
       <div className="product-detail-wrapper">
         <div className="product-meta">
           <div className="bread-crumb text-muted">
@@ -116,6 +121,7 @@ const ProductDetails = (props) => {
               {images.map((value, index) => {
                 return (
                   <img
+                    key={index}
                     src={value.url}
                     alt={"img1" + index}
                     style={{ order: 1 }}
@@ -133,18 +139,7 @@ const ProductDetails = (props) => {
         </div>
         <div className="product-options">
           <div className="size-color">
-            <div className="size size-color-item">
-              <p className="size-color-title">Choose Size</p>
-              <div className="sizes">
-                {product.size.map(sz=> {
-                  return (
-                    <button key={sz} style={{background: sz===cart.size && "var(--black)",
-                  color: sz===cart.size && "var(--light)"}}  onClick={()=>setCart({...cart, size: sz})}>{sz}</button>
-                  )
-                })}
-              </div>
-            </div>
-            <div className="color size-color-item">
+          <div className="color size-color-item">
               <p className="size-color-title">Choose Color</p>
               <div className="colors">
                 {colors.map((color, index) => {
@@ -158,6 +153,28 @@ const ProductDetails = (props) => {
                 })}
               </div>
             </div>
+            
+            <div className="size size-color-item">
+              <p className="size-color-title">Choose Size</p>
+              <div className="sizes">
+                <Select width='100%' height={40}>
+                  {
+                    product.size.map(sz=> (
+                      <option value={sz} selected>
+                        {sz}
+                      </option>
+                    ))
+                  }
+                </Select>
+                {/* {product.size.map(sz=> {
+                  return (
+                    <button key={sz} style={{background: sz===cart.size && "var(--black)",
+                  color: sz===cart.size && "var(--light)"}}  onClick={()=>setCart({...cart, size: sz})}>{sz}</button>
+                  )
+                })} */}
+              </div>
+            </div>
+           
             <div className="color size-color-item">
               <p className="size-color-title"></p>
               <div className="qty">
