@@ -7,6 +7,7 @@ import { getRecordById, getRecords } from "../../redux/services/common";
 import { GET_CATEGORIES } from "../../redux/services/category/categories.action";
 import { GET_PRODUCT } from "../../redux/services/product/product.actions";
 import { GET_COLORS } from "../../redux/services/color/color.actions";
+import { ADD_TO_CART } from "../../redux/services/cart/cart.actions";
 import { toaster, Pane, Spinner, Select } from "evergreen-ui";
 import "./productDetails.scss";
 
@@ -18,12 +19,10 @@ const ProductDetails = (props) => {
   const [colors, setColors] = useState([]);
   const [images, setImages] = useState([]);
   const [activeImage, setActiveImage] = useState(images[0]);
-  const [cartProduct, setQty] = useState({qty: 1});
   const [cart, setCart] = useState({product: null, qty: 1, color: null, size: null, price: 0, name: "", image: null });
   useEffect(() => {
     dispatch(getRecords("/categories", GET_CATEGORIES));
     dispatch(getRecords("/colors", GET_COLORS));
-    // addToCart();
   }, []);
   useEffect(() => {
     if (props.match.params.id) {
@@ -45,32 +44,8 @@ const ProductDetails = (props) => {
     return avaiilableColors || []
   }
   const addToCart = (newProductToBeAdd = null) => {
-    let localCart = JSON.parse(localStorage.getItem('cart'));
-    if (!newProductToBeAdd) {
-      newProductToBeAdd = {
-        product: '61a203beaff8590ee8c384ee',
-        color: '61a2033eaff8590ee8c384eb',
-        size: 'XL',
-        qty: 2,
-        price: 0,
-        name: "",
-        image: null
-      };
-    }
-    if (!localCart) {
-      localStorage.setItem('cart', JSON.stringify([newProductToBeAdd]));
-      toaster.success('Item added in the cart');
-    } else {
-      const isProductAlreadyExistsInTheCart = localCart.find(prdct=> prdct.product === newProductToBeAdd.product);
-      if (isProductAlreadyExistsInTheCart) {
-        console.log("ProductAlready in the cart");
-        return;
-      }
-      localCart.push(newProductToBeAdd);
-      localStorage.setItem('cart', JSON.stringify(localCart));
-      toaster.success('Item added in the cart');
-    }
-    console.log("localCart = ", localCart);
+    dispatch(ADD_TO_CART('success', {cart: newProductToBeAdd}));
+    toaster.success('Item added in the cart');
   }
   if (loading || !product) {
     return (
@@ -157,7 +132,7 @@ const ProductDetails = (props) => {
             <div className="size size-color-item">
               <p className="size-color-title">Choose Size</p>
               <div className="sizes">
-                <Select width='100%' height={40}>
+                <Select width='100%' height={40} onChange={(e)=>setCart({...cart, size: e.target.value})}>
                   {
                     product.size.map(sz=> (
                       <option value={sz} selected>
@@ -180,14 +155,14 @@ const ProductDetails = (props) => {
               <div className="qty">
                 <div className="product-qty">
                   <div id="sub" className="remove-qty" onClick={()=> {
-                    cartProduct.qty !== 1 && (setQty({...cartProduct, qty: cartProduct.qty - 1}))
+                    cart.qty !== 1 && (setCart({...cart, qty: cart.qty - 1}))
                   }
                   }
                     >-</div>
-                  <div className="qty"> {cartProduct.qty} </div>
+                  <div className="qty"> {cart.qty} </div>
                   <div id="add" className="add-qty" onClick={
                     ()=> {
-                      cartProduct.qty !== 10 && (setQty({...cartProduct, qty: cartProduct.qty + 1}))
+                      cart.qty !== 10 && (setCart({...cart, qty: cart.qty + 1}))
                     }
                     }>+</div>
                 </div>

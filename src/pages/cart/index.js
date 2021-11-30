@@ -1,16 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import { SmallCrossIcon } from "evergreen-ui";
 import "./cart.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { REMOVE_FROM_CART } from "../../redux/services/cart/cart.actions";
 const Cart = () => {
-    const [cartProducts, setCartProducts] = useState(null);
-    useEffect(()=>{
-        let localCart = JSON.parse(localStorage.getItem('cart'));
-        setCartProducts(localCart);
-    }, []);
+    const { cart: cartProducts } = useSelector(state=> state.cart);
+    const dispatch = useDispatch();
     const removeProductFromCart = (productId) => {
-        let filteredProducts = cartProducts.filter(product => product.product !== productId);
-        localStorage.setItem('cart', JSON.stringify(filteredProducts));
-        setCartProducts(filteredProducts);
+        dispatch(REMOVE_FROM_CART('success', productId));
     }
     return (
         <section className="container">
@@ -31,7 +28,7 @@ const Cart = () => {
                                             {product.name}
                                         </h3>
                                         <p>{product.size}</p>
-                                        <p>INR {product.price.toFixed(2)}</p>
+                                        <p>{product.qty} x INR {product.price.toFixed(2)}</p>
                                     </div>
                                     <span onClick={()=> removeProductFromCart(product.product)}>
                                         <SmallCrossIcon />
@@ -46,7 +43,7 @@ const Cart = () => {
                     <h1>
                         <span>Total: </span>
                         INR { cartProducts && cartProducts.length ? 
-                            cartProducts.map(product=> product.price).reduce((pre, cur) => pre+ cur, 0).toFixed(2) :
+                            cartProducts.map(product=> product.price* product.qty).reduce((pre, cur) => pre+ cur, 0).toFixed(2) :
                             0 }
                     </h1>
                     <p>Shipping & taxes calculated at checkout

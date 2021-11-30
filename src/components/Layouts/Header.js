@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Logo from "../../logo.svg";
 import Cart from "../../assets/icons/cart.svg";
 import Heart from "../../assets/icons/heart.svg";
@@ -8,14 +8,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { SET_FILTERS } from "../../redux/services/product/product.actions";
 import history from "../../common/history";
 import useMediaQuery from "../../hooks/useMediaQuery";
-import { SideSheet, Pane, Heading, Card, Button, MenuIcon, CrossIcon } from "evergreen-ui";
+import { SideSheet, Pane, Heading, Card, CrossIcon } from "evergreen-ui";
 import "./header.scss";
 const Header = () => {
   const categories = useSelector((state) => state.categories.categories);
   const dispatch = useDispatch();
   const matches = useMediaQuery("(max-width: 600px)");
   const [isShown, setIsShown] = useState(false);
-  let localCart = JSON.parse(localStorage.getItem('cart'));
+  const {cart} = useSelector(state => state.cart);
+  
   return (
     <header className="top-header">
       {isShown && <SlideSheet isShown={isShown} setIsShown={setIsShown} />}
@@ -66,7 +67,7 @@ const Header = () => {
             </li>
             <li>
               <img src={Cart} alt="cart" onClick={()=> history.push('/cart')} />
-              <span className="cart-counter">{localCart && localCart.length ? localCart.length: 0 }</span>
+              <span className="cart-counter">{cart && cart.length ? cart.length: 0 }</span>
             </li>
             {/* <li>Zaid</li> */}
             {/* {matches && (
